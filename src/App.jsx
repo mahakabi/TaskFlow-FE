@@ -4,8 +4,8 @@ import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 import { ProtectedRoute, GuestRoute } from "@core/router";
 import useThemeStore from "@store/themeStore";
 
-import LoginForm from "@modules/auth/components/LoginForm";
-import RegisterForm from "@modules/auth/components/RegisterForm";
+import LoginForm from "@modules/auth/components/Loginform";
+import RegisterForm from "@modules/auth/components/Registerform";
 import DashboardPage from "@modules/dashboard/pages/DashboardPage";
 import ProjectsPage from "@modules/projects/pages/ProjectsPage";
 import ProjectDetailPage from "@modules/projects/pages/ProjectDetailPage";
