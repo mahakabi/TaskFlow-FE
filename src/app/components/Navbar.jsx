@@ -1,22 +1,27 @@
 import {
-  AppBar, Toolbar, Typography, IconButton, Box, Button, Tooltip, Avatar,
+  AppBar, Toolbar, Typography, IconButton, Box, Tooltip, Avatar, useMediaQuery, useTheme, Divider,
 } from "@mui/material";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { useNavigate, NavLink } from "react-router-dom";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import FolderIcon from "@mui/icons-material/Folder";
+import { useNavigate } from "react-router-dom";
 import useAuthStore from "@store/authStore";
 import useThemeStore from "@store/themeStore";
+import NavLinkButton from "@components/NavLinkButton";
+import ThemeToggleButton from "@components/ThemeToggleButton";
 
 const navLinks = [
-  { label: "Dashboard", to: "/" },
-  { label: "Projects", to: "/projects" },
+  { label: "Dashboard", to: "/", icon: <DashboardIcon fontSize="small" /> },
+  { label: "Projects", to: "/projects", icon: <FolderIcon fontSize="small" /> },
 ];
 
 export default function Navbar() {
   const navigate = useNavigate();
   const { clearAuth, user } = useAuthStore();
   const { mode, toggleMode } = useThemeStore();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isDark = mode === "dark";
 
   const handleLogout = () => {
     clearAuth();
@@ -26,87 +31,140 @@ export default function Navbar() {
   return (
     <AppBar
       position="sticky"
+      elevation={0}
       sx={{
-        bgcolor: mode === "dark" ? "rgba(8,13,26,0.85)" : "rgba(255,255,255,0.85)",
-        backdropFilter: "blur(12px)",
+        bgcolor: isDark ? "rgba(8,13,26,0.90)" : "rgba(255,255,255,0.90)",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
         borderBottom: "1px solid",
-        borderColor: "divider",
+        borderColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.07)",
       }}
     >
-      <Toolbar sx={{ gap: 1, minHeight: "56px !important" }}>
+      <Toolbar sx={{ minHeight: "60px !important", px: { xs: 2, sm: 3 }, gap: 1 }}>
+
         {/* Logo */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mr: 3 }}>
+        <Box
+          onClick={() => navigate("/")}
+          sx={{
+            display: "flex", alignItems: "center", gap: 1,
+            mr: { xs: 1, sm: 2 }, cursor: "pointer",
+            "&:hover .logo-box": { transform: "rotate(-6deg) scale(1.05)" },
+          }}
+        >
           <Box
+            className="logo-box"
             sx={{
-              width: 28, height: 28, borderRadius: "7px",
-              background: "linear-gradient(135deg, #06B6D4, #8B5CF6)",
+              width: 32, height: 32, borderRadius: "9px",
+              background: "linear-gradient(135deg, #06B6D4 0%, #8B5CF6 100%)",
               display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: "14px", fontWeight: 900, color: "#fff",
+              fontSize: "15px", fontWeight: 900, color: "#fff",
+              flexShrink: 0, boxShadow: "0 2px 12px rgba(6,182,212,0.35)",
+              transition: "transform 0.2s ease",
             }}
           >
             T
           </Box>
           <Typography
             variant="subtitle1"
-            fontWeight={700}
-            sx={{ letterSpacing: "-0.03em", color: "text.primary" }}
+            fontWeight={800}
+            sx={{
+              letterSpacing: "-0.04em",
+              display: { xs: "none", sm: "block" },
+              background: isDark
+                ? "linear-gradient(90deg, #e2e8f0, #94a3b8)"
+                : "linear-gradient(90deg, #0f172a, #475569)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
           >
             TaskFlow
           </Typography>
         </Box>
 
+        {/* Divider after logo */}
+        <Divider
+          orientation="vertical"
+          flexItem
+          sx={{
+            mr: { xs: 0.5, sm: 1.5 },
+            borderColor: isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)",
+            display: { xs: "none", sm: "block" },
+          }}
+        />
+
         {/* Nav links */}
         <Box sx={{ display: "flex", gap: 0.5, flexGrow: 1 }}>
           {navLinks.map((link) => (
-            <Button
+            <NavLinkButton
               key={link.to}
-              component={NavLink}
               to={link.to}
-              sx={{
-                textTransform: "none",
-                fontWeight: 500,
-                fontSize: "0.875rem",
-                color: "text.secondary",
-                px: 1.5,
-                py: 0.75,
-                borderRadius: 2,
-                "&.active": {
-                  color: "primary.main",
-                  bgcolor: "rgba(6,182,212,0.08)",
-                  fontWeight: 600,
-                },
-                "&:hover": { bgcolor: "action.hover", color: "text.primary" },
-              }}
-            >
-              {link.label}
-            </Button>
+              label={link.label}
+              icon={link.icon}
+              isMobile={isMobile}
+              isDark={isDark}
+            />
           ))}
         </Box>
 
-        {/* Actions */}
-        <Tooltip title={`Switch to ${mode === "dark" ? "light" : "dark"} mode`}>
-          <IconButton onClick={toggleMode} size="small" sx={{ color: "text.secondary" }}>
-            {mode === "dark" ? <Brightness7Icon fontSize="small" /> : <Brightness4Icon fontSize="small" />}
-          </IconButton>
-        </Tooltip>
+        {/* Right actions */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
 
-        <Tooltip title="Logout">
-          <IconButton onClick={handleLogout} size="small" sx={{ color: "text.secondary" }}>
-            <LogoutIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
+          <ThemeToggleButton isDark={isDark} onToggle={toggleMode} />
 
-        {user?.name && (
-          <Avatar
+          <Divider
+            orientation="vertical"
+            flexItem
             sx={{
-              width: 30, height: 30, fontSize: "0.75rem", fontWeight: 700,
-              background: "linear-gradient(135deg, #06B6D4, #8B5CF6)",
-              ml: 0.5,
+              mx: 0.5,
+              borderColor: isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)",
             }}
-          >
-            {user.name[0].toUpperCase()}
-          </Avatar>
-        )}
+          />
+
+          {/* User name + avatar */}
+          {user?.name && (
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Box sx={{ display: { xs: "none", md: "block" }, textAlign: "right" }}>
+                <Typography variant="caption" fontWeight={600} sx={{ color: "text.primary", lineHeight: 1, display: "block" }}>
+                  {user.name}
+                </Typography>
+                <Typography variant="caption" sx={{ color: "text.disabled", fontSize: "0.7rem" }}>
+                  {user.email}
+                </Typography>
+              </Box>
+              <Tooltip title={user.name} arrow>
+                <Avatar
+                  sx={{
+                    width: 32, height: 32, fontSize: "0.8rem", fontWeight: 700,
+                    background: "linear-gradient(135deg, #06B6D4, #8B5CF6)",
+                    boxShadow: "0 2px 8px rgba(6,182,212,0.3)",
+                    cursor: "default", flexShrink: 0,
+                    border: "2px solid",
+                    borderColor: isDark ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.9)",
+                  }}
+                >
+                  {user.name[0].toUpperCase()}
+                </Avatar>
+              </Tooltip>
+            </Box>
+          )}
+
+          {/* Logout */}
+          <Tooltip title="Logout" arrow>
+            <IconButton
+              onClick={handleLogout}
+              size="small"
+              sx={{
+                color: "text.secondary",
+                width: 34, height: 34,
+                borderRadius: "10px",
+                transition: "all 0.15s ease",
+                "&:hover": { bgcolor: "rgba(239,68,68,0.1)", color: "#ef4444" },
+              }}
+            >
+              <LogoutIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Box>
       </Toolbar>
     </AppBar>
   );
