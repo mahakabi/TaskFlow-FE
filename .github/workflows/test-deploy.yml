@@ -20,29 +20,32 @@ jobs:
         uses: slackapi/slack-github-action@v1.27.0
         with:
           channel-id: 'C0B9UP5L92B'
-          payload: |
+         payload: |
             {
-              "blocks": [
+              "attachments": [
                 {
-                  "type": "header",
-                  "text": { "type": "plain_text", "text": "🚀 Deployment Successful" }
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    { "type": "mrkdwn", "text": "*Repo:*\n${{ github.repository }}" },
-                    { "type": "mrkdwn", "text": "*Author:*\n${{ github.event.pull_request.user.login }}" },
-                    { "type": "mrkdwn", "text": "*PR:*\n${{ github.event.pull_request.title }}" },
-                    { "type": "mrkdwn", "text": "*Branch:*\nstaging" }
-                  ]
-                },
-                {
-                  "type": "actions",
-                  "elements": [
+                  "color": "#36a64f",
+                  "blocks": [
                     {
-                      "type": "button",
-                      "text": { "type": "plain_text", "text": "View PR" },
-                      "url": "${{ github.event.pull_request.html_url }}"
+                      "type": "section",
+                      "text": { "type": "mrkdwn", "text": "<!channel>" }
+                    },
+                    {
+                      "type": "header",
+                      "text": { "type": "plain_text", "text": "🚀 Deployment Successful" }
+                    },
+                    {
+                      "type": "section",
+                      "fields": [
+                        { "type": "mrkdwn", "text": "*Repo:*\n${{ github.repository }}" },
+                        { "type": "mrkdwn", "text": "*Author:*\n${{ github.event.pull_request.user.login }}" },
+                        { "type": "mrkdwn", "text": "*PR:*\n${{ github.event.pull_request.title }}" },
+                        { "type": "mrkdwn", "text": "*Branch:*\nstaging" }
+                      ]
+                    },
+                    {
+                      "type": "section",
+                      "text": { "type": "mrkdwn", "text": "<${{ github.event.pull_request.html_url }}|View Pull Request>" }
                     }
                   ]
                 }
