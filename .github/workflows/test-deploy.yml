@@ -19,7 +19,7 @@ jobs:
       - name: Notify Slack
         uses: slackapi/slack-github-action@v1.27.0
         with:
-          channel-id: 'C0123456789'
+          channel-id: 'C0B9UP5L92B'
           payload: |
             {
               "text": "🚀 *${{ github.repository }}* deployed\nPR: \"${{ github.event.pull_request.title }}\" by ${{ github.event.pull_request.user.login }}\n${{ github.event.pull_request.html_url }}"
