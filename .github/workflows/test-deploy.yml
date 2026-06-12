@@ -20,14 +20,11 @@ jobs:
           channel-id: 'C0B9UP5L92B'
           payload: |
             {
+              "text": "<!channel>",
               "attachments": [
                 {
                   "color": "#36a64f",
                   "blocks": [
-                    {
-                      "type": "section",
-                      "text": { "type": "mrkdwn", "text": "<!channel>" }
-                    },
                     {
                       "type": "header",
                       "text": { "type": "plain_text", "text": "🚀 Deployment Successful" }
