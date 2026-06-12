@@ -1,10 +1,8 @@
 name: Test Deploy Notify
-
 on:
   pull_request:
     types: [closed]
     branches: [main]
-
 jobs:
   fake-deploy:
     if: github.event.pull_request.merged == true
@@ -20,7 +18,7 @@ jobs:
         uses: slackapi/slack-github-action@v1.27.0
         with:
           channel-id: 'C0B9UP5L92B'
-         payload: |
+          payload: |
             {
               "attachments": [
                 {
