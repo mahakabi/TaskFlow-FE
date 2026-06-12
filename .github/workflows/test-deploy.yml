@@ -3,7 +3,7 @@ name: Test Deploy Notify
 on:
   pull_request:
     types: [closed]
-    branches: [staging]
+    branches: [main]
 
 jobs:
   fake-deploy:
